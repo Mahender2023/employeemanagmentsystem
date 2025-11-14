@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+	<!-- Appenders: Define where logs should be written -->
+	<Appenders>
+		<Console name="ConsoleAppender" target="SYSTEM_OUT">
+			<!-- message format %d: timestamp, %t: thread , %m: message, %n: newline -->
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+
+		<!-- File Appender: Writes logs to a file -->
+		<RollingFile name="FileAppender"
+			fileName="logs/application.log"
+			filePattern="logs/application-%d{yyyy-MM-dd}-%i.log.gz">
+
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+
+			<Policies>
+
+				<!-- Roll over daily -->
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+
+				<!-- Roll over when file size reaches 10MB -->
+				<SizeBasedTriggeringPolicy size="10MB" />
+
+			</Policies>
+
+			<!-- Keep maximum 30 log files -->
+			<DefaultRolloverStrategy max="30" />
+
+		</RollingFile>
+
+	</Appenders>
+
+
+	<!-- logging levels for different packages -->
+	<Loggers>
+	
+		<!-- Application Logger: Log everything from application -->
+		<!-- additivity is attribute false which restrict to send to root -->
+		 <Logger name="com.enterprise.ems" level="TRACE" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+        </Logger>
+
+
+		<!-- Spring Framework Logger: Log important Spring events -->
+		<Logger name="org.springframework" level="INFO"
+			additivity="false">
+			<AppenderRef ref="ConsoleAppender" />
+		</Logger>
+
+
+		<!-- Hibernate/JPA Logger: Log SQL queries and database operations -->
+		<Logger name="org.hibernate" level="INFO" additivity="false">
+			<AppenderRef ref="ConsoleAppender" />
+		</Logger>
+
+
+
+		<!-- SQL Logger: Log SQL statements (set to DEBUG to see queries) -->
+		<Logger name="org.hibernate.SQL" level="DEBUG"
+			additivity="false">
+			<AppenderRef ref="ConsoleAppender" />
+		</Logger>
+
+
+
+		<!-- Root Logger: Catch-all for any other logs -->
+		<Root level="INFO">
+			<AppenderRef ref="ConsoleAppender" />
+			<AppenderRef ref="FileAppender" />
+		</Root>
+
+
+	</Loggers>
+
+</Configuration>
+
